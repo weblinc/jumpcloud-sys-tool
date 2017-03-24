@@ -8,10 +8,9 @@ Download and install the binary on a system where the JumpCloud agent is install
 
 ```bash
 sudo su -
-export JC_BIN="jcsystool-linux-amd64" # or jcsystool-mac-amd64
-wget "https://linktobinary.com/$JC_BIN.tar.gz"
-tar -xvf $JC_BIN.tar.gz
-mv $JC_BIN /usr/bin/jcsystool && chmod 700 /usr/bin/jcsystool
+wget https://github.com/weblinc/jumpcloud-sys-tool/releases/download/1.0.0/jcsystool-linux-amd64-1.0.0.tar.gz
+tar -xvf jcsystool-linux-amd64-1.0.0.tar.gz
+mv jcsystool-linux-amd64-1.0.0 /usr/bin/jcsystool && chmod 700 /usr/bin/jcsystool
 ```
 
 ## Usage
