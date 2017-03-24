@@ -50,10 +50,10 @@ $ jcsystool -X GET
 $ jcsystool -X DELETE
 
 # Update system configuration via -J flag
-jcsystool -X PUT -J '{ "displayName": "mySystem" }'
+$ jcsystool -X PUT -J '{ "displayName": "mySystem" }'
 
 # Update system configuration via STDIN
-echo '{ "tags": ["staging-server"] }' | jcsystool -X PUT
+$ echo '{ "tags": ["staging-server"] }' | jcsystool -X PUT
 ```
 
 [1]: https://github.com/TheJumpCloud/SystemContextAPI
