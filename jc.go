@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/jessevdk/go-flags"
-	"github.com/thomasv314/jumpcloud/jc"
+	"github.com/weblinc/jumpcloud-sys-tool/jc"
 	"io/ioutil"
 	"os"
 )
