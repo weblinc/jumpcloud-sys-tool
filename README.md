@@ -1,6 +1,6 @@
 # jcsystool
 
-Go binary for performing [JumpCloud SystemContext API](1) calls.
+Go binary for performing [JumpCloud SystemContext API][1] calls.
 
 ## Install
 
