@@ -46,16 +46,28 @@ func NewSystemClient(configPath, clientKeyPath string) (client SystemClient, err
 	return
 }
 
+func (c *SystemClient) AssociateGroup(groupId string) (result string, err error) {
+	endpoint := "/api/v2/systemgroups/" + groupId + "/members"
+	json := "{ \"op\": \"add\", \"type\": \"system\", \"id\": \"" + c.SystemKey + "\" }"
+
+	_, err = c.Do(endpoint, "POST", json)
+
+	return "Successfully associated to " + groupId, err
+}
+
 // Sends an API request to the endpoint specified for the system key
-func (c *SystemClient) Do(httpMethod, body string) (resp *http.Response, err error) {
-	urlPath := "/api/systems/" + c.SystemKey
-	url := c.url(urlPath)
+func (c *SystemClient) Do(endpoint, httpMethod, body string) (resp *http.Response, err error) {
+	if endpoint == "" {
+		endpoint = "/api/systems/" + c.SystemKey
+	}
+
+	url := c.url(endpoint)
 
 	req, err := http.NewRequest(httpMethod, url, bytes.NewReader([]byte(body)))
 
 	time := getTime()
 
-	requestSigHeader, err := c.getAuthSignature(time, httpMethod, urlPath)
+	requestSigHeader, err := c.getAuthSignature(time, httpMethod, endpoint)
 
 	if err != nil {
 		log.Println("Error retrieving signature for request", err)
@@ -73,10 +85,10 @@ func (c *SystemClient) Do(httpMethod, body string) (resp *http.Response, err err
 }
 
 // Gets an Auth Signature header based off the client.key file and system key
-func (c *SystemClient) getAuthSignature(time, httpMethod, urlPath string) (header string, err error) {
+func (c *SystemClient) getAuthSignature(time, httpMethod, endpoint string) (header string, err error) {
 	header = "Signature "
 
-	requestSig, err := c.ClientKey.SignatureForRequest(time, httpMethod, urlPath)
+	requestSig, err := c.ClientKey.SignatureForRequest(time, httpMethod, endpoint)
 
 	if err != nil {
 		return

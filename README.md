@@ -42,8 +42,11 @@ There is only one endpoint `/systems/<random-system-guid>` which accepts `GET`, 
 ## Examples
 
 ```bash
-# Get system Information
+# Get System Information
 $ jcsystool -X GET
+
+# Tag a system w/ a Group Association (JC API v2 only)
+$ jcsystool --associate-group=012345678
 
 # Delete system from JumpCloud
 $ jcsystool -X DELETE
