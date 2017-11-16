@@ -11,12 +11,13 @@ import (
 const version = "1.0.0"
 
 func main() {
-
 	fmt.Println("jcsystool - JumpCloud System Tool", version)
 
 	var opts struct {
-		HttpAction  string `short:"X" long:"action" description:"HTTP method to use e.g. GET/PUT/DELETE" required:"true"`
-		JSONContent string `short:"J" long:"json" description:"JSON string to use for PUT actions to system API. Alternatively, use STDIN."`
+		AssociateGroup string `long:"associate-group" description:"Associate a group"`
+		HttpAction     string `short:"X" long:"action" description:"HTTP method to use e.g. GET/PUT/DELETE"`
+		JSONContent    string `short:"J" long:"json" description:"JSON string to use for PUT actions to system API. Alternatively, use STDIN."`
+		Endpoint       string `short:"e" long:"endpoint" description:"The endpoint to hit."`
 	}
 
 	_, err := flags.Parse(&opts)
@@ -24,8 +25,34 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Create the client with config/client key overrides if neccessary
+	client, err := jc.NewSystemClient(
+		os.Getenv("JC_CONFIG_PATH"),
+		os.Getenv("JC_CLIENT_KEY_PATH"),
+	)
+
+	if err != nil {
+		exitWithError("Error creating client.", err)
+	}
+
+	if opts.AssociateGroup != "" {
+		associated, err := client.AssociateGroup(opts.AssociateGroup)
+		if err != nil {
+			exitWithError("Error associating group.", err)
+		}
+
+		fmt.Println("Associated:", associated)
+		os.Exit(0)
+	}
+
 	httpAction := opts.HttpAction
+
+	if httpAction == "" {
+		httpAction = "GET"
+	}
+
 	jsonContent := opts.JSONContent
+	endpoint := opts.Endpoint
 
 	// PUT requests are the only actions that need json to send
 	if httpAction == "PUT" {
@@ -41,17 +68,8 @@ func main() {
 		jsonContent = ""
 	}
 
-	// Create the client with config/client key overrides if neccessary
-	client, err := jc.NewSystemClient(
-		os.Getenv("JC_CONFIG_PATH"),
-		os.Getenv("JC_CLIENT_KEY_PATH"),
-	)
+	resp, err := client.Do(endpoint, httpAction, jsonContent)
 
-	if err != nil {
-		exitWithError("Error creating client.", err)
-	}
-
-	resp, err := client.Do(httpAction, jsonContent)
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	body := string(bodyBytes)
 	if resp.StatusCode == 200 {
