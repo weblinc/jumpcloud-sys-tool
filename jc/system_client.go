@@ -47,19 +47,19 @@ func NewSystemClient(configPath, clientKeyPath string) (client SystemClient, err
 }
 
 func (c *SystemClient) AssociateGroup(groupId string) (result string, err error) {
-  endpoint := "/api/v2/systemgroups/" + groupId + "/members"
-  json := "{ \"op\": \"add\", \"type\": \"system\", \"id\": \"" + c.SystemKey + "\" }"
+	endpoint := "/api/v2/systemgroups/" + groupId + "/members"
+	json := "{ \"op\": \"add\", \"type\": \"system\", \"id\": \"" + c.SystemKey + "\" }"
 
-  _, err := c.Do(endpoint, "POST", json)
+	_, err := c.Do(endpoint, "POST", json)
 
-  return "Successfully associated to " + groupId, err
+	return "Successfully associated to " + groupId, err
 }
 
 // Sends an API request to the endpoint specified for the system key
 func (c *SystemClient) Do(endpoint, httpMethod, body string) (resp *http.Response, err error) {
-  if endpoint == "" {
-    endpoint = "/api/systems/" + c.SystemKey
-  }
+	if endpoint == "" {
+		endpoint = "/api/systems/" + c.SystemKey
+	}
 
 	url := c.url(endpoint)
 
