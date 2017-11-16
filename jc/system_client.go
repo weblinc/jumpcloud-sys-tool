@@ -50,7 +50,7 @@ func (c *SystemClient) AssociateGroup(groupId string) (result string, err error)
 	endpoint := "/api/v2/systemgroups/" + groupId + "/members"
 	json := "{ \"op\": \"add\", \"type\": \"system\", \"id\": \"" + c.SystemKey + "\" }"
 
-	_, err := c.Do(endpoint, "POST", json)
+	_, err = c.Do(endpoint, "POST", json)
 
 	return "Successfully associated to " + groupId, err
 }
